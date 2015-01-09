@@ -15,7 +15,6 @@ namespace RainbowMage.OverlayPlugin
         public event EventHandler<ThruStateChangedEventArgs> ClickThruChanged;
         public event EventHandler<UrlChangedEventArgs> UrlChanged;
         public event EventHandler<MaxFrameRateChangedEventArgs> MaxFrameRateChanged;
-        public event EventHandler<OverlaySizeChangedEventArgs> OverlaySizeChanged;
 
         private bool isVisible;
         [XmlElement("IsVisible")]
@@ -62,26 +61,8 @@ namespace RainbowMage.OverlayPlugin
         [XmlElement("Position")]
         public Point Position { get; set; }
 
-        private Size size;
         [XmlElement("Size")]
-        public Size Size
-        {
-            get
-            {
-                return this.size;
-            }
-            set
-            {
-                if (!this.size.Equals(value))
-                {
-                    this.size = value;
-                    if (OverlaySizeChanged != null)
-                    {
-                        OverlaySizeChanged(this, new OverlaySizeChangedEventArgs(this.size));
-                    }
-                }
-            }
-        }
+        public Size Size { get; set; }
 
         private string url;
         [XmlElement("Url")]
