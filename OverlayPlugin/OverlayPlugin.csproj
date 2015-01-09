@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigEventArgs.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="ControlPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -60,6 +61,7 @@
       <DependentUpon>ControlPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="DIBitmap.cs" />
+    <Compile Include="KeyHandler.cs" />
     <Compile Include="MiniParseOverlay.cs" />
     <Compile Include="MiniParseOverlayConfig.cs" />
     <Compile Include="NativeMethods.cs" />

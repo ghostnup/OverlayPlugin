@@ -19,7 +19,7 @@ namespace RainbowMage.OverlayPlugin
         private DIBitmap surfaceBuffer;
         private object surfaceBufferLocker = new object();
         private int maxFrameRate;
-
+        private KeyHandler ghkHideParseOverlay;
         public Renderer Renderer { get; private set; }
         public new bool IsDisposed { get; private set; }
 
@@ -69,6 +69,9 @@ namespace RainbowMage.OverlayPlugin
             this.url = url;
 
             Util.Hide(this);
+
+            ghkHideParseOverlay = new KeyHandler(Constants.CTRL, Keys.W, this);
+            ghkHideParseOverlay.Register();
         }
 
         public void Reload()
@@ -114,6 +117,8 @@ namespace RainbowMage.OverlayPlugin
                     return;
                 }
             }
+            else if (m.Msg == Constants.WM_HOTKEY_MSG_ID)
+                HandleHotkey(ref m);
             
         }
 
@@ -285,6 +290,8 @@ namespace RainbowMage.OverlayPlugin
                 }
             }
 
+            ghkHideParseOverlay.Unregister();
+
             this.IsDisposed = true;
         }
 
@@ -319,6 +326,11 @@ namespace RainbowMage.OverlayPlugin
         private void OverlayForm_MouseUp(object sender, MouseEventArgs e)
         {
             isDragging = false;
+        }
+
+        private void HandleHotkey(ref Message m)
+        {
+            this.Visible = !this.Visible;
         }
     }
 }

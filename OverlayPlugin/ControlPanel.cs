@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
+using Advanced_Combat_Tracker;
 
 namespace RainbowMage.OverlayPlugin
 {
@@ -25,7 +26,7 @@ namespace RainbowMage.OverlayPlugin
             new KeyValuePair<string, MiniParseSortType>(Localization.GetText(TextItem.SortNumberAscending), MiniParseSortType.NumericAscending),
             new KeyValuePair<string, MiniParseSortType>(Localization.GetText(TextItem.SortNumberDescending), MiniParseSortType.NumericDescending)
         };
-
+        
         public ControlPanel(PluginMain pluginMain, PluginConfig config)
         {
             InitializeComponent();
