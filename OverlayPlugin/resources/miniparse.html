@@ -1,15 +1,15 @@
-﻿<html>
+<html>
 <head>
     <meta charset="utf-8" />
     <title></title>
     <style>
 
         /*
-            表示設定 (1)
+            ???? (1)
         */
 
         * {
-            /* フォント （一部のフォントは上手く適用されない） */
+            /* ???? ??????????????????? */
             font-family: "Meiryo";
             font-size: 12px;
         }
@@ -19,25 +19,32 @@
         }
 
         html {
-            /* リサイズ用のハンドル
-             * リサイズができる場所はウィンドウ右下の16x16ピクセルの場所
-             * この部分が完全に透明だとマウス入力が透過してしまってサイズを変更できなくなる */
-            background-image: url(handle.png);
+            /* ??????????
+             * ???????????????????16x16???????
+             * ?????????????????????????????????????? */
+            //background-image: url(handle.png);
             background-position: bottom right;
             background-repeat: no-repeat;
             box-sizing: border-box;
             height: 100%;
 
-            /* 外枠 */
+            /* ?? */
             /*border: 1px solid rgba(0,0,0,0.1);*/
             
-            /* はみ出た内容はスクロールバーを表示させずに隠す
-             * 今のところ、ブラウザへの入力はできないので表示させても無意味 */
+            /* ???????????????????????
+             * ?????????????????????????????? */
             overflow: hidden;
             
-            /* 背景色 */
+            /* ??? */
             background-color: transparent;
         }
+		
+#wrapper {
+        background: rgba(0, 0, 0, 0.35);
+        box-shadow: 0 0 8px 8px rgba(0, 0, 0, 0.35);
+        border-radius: 4px;
+        margin: 12px;
+    }
 
         #combatantTable {
             width: 100%;
@@ -45,19 +52,23 @@
             border-collapse: collapse;
         }
 
-        /* キャラクターデータのテキストの設定 */
+        /* ????????????????? */
         #combatantTableBody * {
             color: #E2EBF5;
             text-shadow: -1px 0 3px #217AA2, 0 1px 3px #217AA2, 1px 0 3px #217AA2, 0 -1px 3px #217AA2;
             font-weight: 300;
 
-            /* はみ出たテキストを「…」で省略する */
+            /* ??????????�?????? */
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
         }
+	#combatantTableBody img {
+			height: 20px;
 
-        /* エンカウント情報とテーブルヘッダ内のテキストの設定 */
+		}
+
+        /* ????????????????????????? */
         #encounter,
         #combatantTableHeader * {
             color: #DED7BE;
@@ -66,7 +77,7 @@
             white-space: nowrap;
         }
 
-        /* テーブルヘッダの下線の設定 */
+        /* ????????????? */
         #combatantTableHeader tr {
             border-bottom: 1px solid #DED7BE;
         }
@@ -75,7 +86,7 @@
     <script>
 
         //
-        // プラグイン側から以下のような ActXiv オブジェクトとしてデータが提供される
+        // ?????????????? ActXiv ??????????????????
         //
         // var ActXiv = {
         //    "Encounter": {...},
@@ -86,87 +97,84 @@
         //    }
         // };
         //
-        // データの更新は 1 秒毎。
+        // ??????? 1 ???
         // 
-        // プラグインから onOverlayDataUpdate イベントが発行されるので、それを受信することもできる
-        // イベントハンドラの第一引数の detail プロパティ内に上記のオブジェクトが入る
+        // ??????? onOverlayDataUpdate ??????????????????????????
+        // ?????????????? detail ???????????????????
         //
 
         //
-        // 表示設定 (2)
+        // ???? (2)
         //
 
-        // エンカウント情報の定義
-        var encounterDefine = "{title} / Time: {duration} / DPS: {ENCDPS}";
+        // ???????????
+        var encounterDefine = "Time: {duration} / DPS: {ENCDPS}";
 
-        // 上記のエンカウント情報を HTML として扱うなら true
+        // ???????????? HTML ??????? true
         var useHTMLEncounterDefine = false;
 
-        // ヘッダの定義
+        // ??????
         var headerDefine =
         [
             //{ text: "#", width: "5%", align: "center" },
+            { text: "Name", width: "10%", align: "left" },
             { text: "Job", width: "8%", align: "center" },
-            { text: "Name", width: "25%", align: "left" },
-            { text: "DPS (%)", width: "18%", align: "center", span: 2 },
-            { text: "HPS (%)", width: "18%", align: "center", span: 2 },
-            { text: "Acc.(%)", width: "16%", align: "right" },
-            { text: "Crt.(%)", width: "14%", align: "right" },
+            { text: "DPS", width: "5%", align: "center", span: 1 },
+            //{ text: "DPS %", width: "5%", align: "center", span: 1 },
+
+            { text: "Crt %", width: "5%", align: "center" },
         ];
 
-        // 表示するデータの定義
+        // ??????????
         var bodyDefine =
         [
             //{ text: rankingText, width: "5%", align: "center", effect: deadYatsuEffect },
-            { html: "<img src='./icons/{JobOrName}.png' style='width=8%;height:auto;' />", align: "center" },
-            { text: "{name}", width: "25%" },
-            { text: "{encdps}", width: "16%", align: "right" },
-            { text: "{damage%}", width: "5%", align: "right" },
-            { text: "{enchps}", width: "16%", align: "right" },
-            { text: "{healed%}", width: "5%", align: "right" },
-            { text: "{tohit}%", width: "16%", align: "right" },
-            { text: "{crithit%}", width: "14%", align: "right" },
+            { text: "{name}", width: "10%" },
+            { html: "<img src='./icons/{JobOrName}.png' onError=\"this.onerror=null;this.src='./icons/error.png';\" />", width: "5%", align: "center" },
+            { text: "{encdps}", width: "5%", align: "center" },
+            //{ text: "{damage%}", width: "5%", align: "center" },
+            { text: "{crithit%}", width: "5%", align: "center" },
         ];
 
-        // 順位を表示する（text に関数を指定する例）
-        // 引数:
-        //  combatant : キャラクターのデータ。combatant["..."]でデータを取得できる。
-        //  index : キャラクターの並び順。一番上は 0 で、その後は 1 ずつ増える。
-        // 戻り値: 
-        //  表示するテキスト。
-        //  ACT のタグは展開されないので、展開したい場合は parseActFormat 関数を使用してください。
+        // ????????text ??????????
+        // ??:
+        //  combatant : ???????????combatant["..."]???????????
+        //  index : ??????????????? 0 ?????? 1 ??????
+        // ???: 
+        //  ?????????
+        //  ACT ????????????????????? parseActFormat ????????????
         function rankingText(combatant, index) {
-            // 1 から始まる番号を返す
+            // 1 ??????????
             return (index + 1).toString();
         }
         
-        // 死亡奴を赤くする（effect の例）
-        // 引数:
-        //  cell : セルの DOM 要素
-        //  combatant : キャラクターのデータ。combatant["..."]でデータを取得できる。
-        //  index: キャラクターの並び順。一番上は 0 で、その後は 1 ずつ増える。
-        // 戻り値: なし
+        // ?????????effect ???
+        // ??:
+        //  cell : ??? DOM ??
+        //  combatant : ???????????combatant["..."]???????????
+        //  index: ??????????????? 0 ?????? 1 ??????
+        // ???: ??
         function deadYatsuEffect(cell, combatant, index) {
-            // デス数を整数値に変換
+            // ??????????
             var deaths = parseInt(combatant["deaths"]);
-            // デス数が 0 よりも大きいなら
+            // ???? 0 ????????
             if (deaths > 0) {
-                // 赤くする
+                // ????
                 cell.style.color = "#FFA0A0";
                 cell.style.textShadow = "-1px 0 3px #802020, 0 1px 3px #802020, 1px 0 3px #802020, 0 -1px 3px #802020";
             }
         }
 
         //
-        // 以下表示用スクリプト
+        // ??????????
         //
 
-        // onOverlayDataUpdate イベントを購読
+        // onOverlayDataUpdate ???????
         document.addEventListener("onOverlayDataUpdate", function (e) {
             update(e.detail);
         });
 
-        // 表示要素の更新
+        // ???????
         function update(data) {
             updateEncounter(data);
             if (document.getElementById("combatantTableHeader") == null) {
@@ -175,35 +183,31 @@
             updateCombatantList(data);
         }
 
-        // エンカウント情報を更新する
+        // ?????????????
         function updateEncounter(data) {
-            // 要素取得
+            // ????
             var encounterElem = document.getElementById('encounter');
 
-            // テキスト取得
+            // ??????
             var elementText;
             if (typeof encounterDefine === 'function') {
                 elementText = encounterDefine(data.Encounter);
-                if (typeof elementText !== 'string') {
-                    console.log("updateEncounter: 'encounterDefine' is declared as function but not returns a value as string.");
-                    return;
-                }
             } else if (typeof encounterDefine === 'string') {
                 elementText = parseActFormat(encounterDefine, data.Encounter);
             } else {
-                console.log("updateEncounter: 'encounterDefine' should be string or function that returns string.");
+                console.log("updateEncounter: Could not update the encounter element due to invalid type.");
                 return;
             }
 
-            // テキスト設定
+            // ??????
             if (!useHTMLEncounterDefine) {
-                encounterElem.innerText = parseActFormat(elementText, data.Encounter);
+                encounterElem.innerText = parseActFormat(encounterDefine, data.Encounter);
             } else {
-                encounterElem.innerHTML = parseActFormat(elementText, data.Encounter);
+                encounterElem.innerHTML = parseActFormat(encounterDefine, data.Encounter);
             }
         }
 
-        // ヘッダを更新する
+        // ????????
         function updateCombatantListHeader() {
             var table = document.getElementById('combatantTable');
             var tableHeader = document.createElement("thead");
@@ -212,20 +216,20 @@
 
             for (var i = 0; i < headerDefine.length; i++) {
                 var cell = document.createElement("th");
-                // テキスト設定
+                // ??????
                 if (typeof headerDefine[i].text !== 'undefined') {
                     cell.innerText = headerDefine[i].text;
                 } else if (typeof headerDefine[i].html !== 'undefined') {
                     cell.innerHTML = headerDefine[i].html;
                 }
-                // 幅設定
+                // ???
                 cell.style.width = headerDefine[i].width;
                 cell.style.maxWidth = headerDefine[i].width;
-                // 横結合数設定
+                // ??????
                 if (typeof headerDefine[i].span !== 'undefined') {
                     cell.colSpan = headerDefine[i].span;
                 }
-                // 行揃え設定
+                // ?????
                 if (typeof headerDefine[i].align !== 'undefined') {
                     cell.style["textAlign"] = headerDefine[i].align;
                 }
@@ -235,44 +239,47 @@
             table.tHead = tableHeader;
         }
 
-        // プレイヤーリストを更新する
+        // ?????????????
         function updateCombatantList(data) {
-            // 要素取得＆作成
+            // ???????
             var table = document.getElementById('combatantTable');
             var oldTableBody = table.tBodies.namedItem('combatantTableBody');
             var newTableBody = document.createElement("tbody");
             newTableBody.id = "combatantTableBody";
 
-            // tbody の内容を作成
+            // tbody ??????
             var combatantIndex = 0;
             for (var combatantName in data.Combatant) {
                 var combatant = data.Combatant[combatantName];
+			combatant.JobOrName = combatant.Job || combatantName;
+			var egiSearch = combatant.JobOrName.indexOf("-Egi (");
+			if (egiSearch !=-1)
+			{
+				combatant.JobOrName = combatant.JobOrName.substring(0,egiSearch);
+			}
+			else if (combatant.JobOrName.indexOf("Eos (")==0)
+			{
+				combatant.JobOrName = "Eos";
+			}
+			else if (combatant.JobOrName.indexOf("Selene (")==0)
+			{
+				combatant.JobOrName = "Selene";
+			}
+			else if (combatant.JobOrName.indexOf("Carbuncle (")!=-1)
+			{
+				// currently no carbuncle pics
+			}
+			else if (combatant.JobOrName.indexOf(" (")!=-1)
+			{
+				combatant.JobOrName = "choco";
+			}
 
-                if (combatantName.search("Eos") != -1) {
-                    var combatantName = 'Eos';
-                }
-                if (combatantName.search("Garuda") != -1) {
-                    var combatantName = 'Garuda';
-                }
-                if (combatantName.search("Titan") != -1) {
-                    var combatantName = 'Titan';
-                }
-                if (combatantName.search("Ifrit") != -1) {
-                    var combatantName = 'Ifrit';
-                }
-                if (combatantName.search("Selene") != -1) {
-                    var combatantName = 'Selene';
-                }
-                if (combatantName.search("Limit Break") != -1) {
-                    var combatantName = 'Limit Break';
-                }
-                combatant.JobOrName = combatant.Job || combatantName;
 
                 var tableRow = newTableBody.insertRow(newTableBody.rows.length);
                 for (var i = 0; i < bodyDefine.length; i++)
                 {
                     var cell = tableRow.insertCell(i);
-                    // テキスト設定
+                    // ??????
                     if (typeof bodyDefine[i].text !== 'undefined') {
                         var cellText;
                         if (typeof bodyDefine[i].text === 'function') {
@@ -290,14 +297,14 @@
                         }
                         cell.innerHTML = cellHTML;
                     }
-                    // 幅設定
+                    // ???
                     cell.style.width = bodyDefine[i].width;
                     cell.style.maxWidth = bodyDefine[i].width;
-                    // 行構え設定
+                    // ?????
                     if (typeof(bodyDefine[i].align) !== 'undefined') {
                         cell.style.textAlign = bodyDefine[i].align;
                     }
-                    // エフェクト実行
+                    // ???????
                     if (typeof bodyDefine[i].effect === 'function') {
                         bodyDefine[i].effect(cell, combatant, combatantIndex);
                     }
@@ -305,7 +312,7 @@
                 combatantIndex++;
             }
 
-            // tbody が既に存在していたら置換、そうでないならテーブルに追加
+            // tbody ???????????????????????????
             if (oldTableBody != void(0)) {
                 table.replaceChild(newTableBody, oldTableBody);
             }
@@ -314,7 +321,7 @@
             }
         }
 
-        // Miniparse フォーマット文字列を解析し、表示文字列を取得する
+        // Miniparse ????????????????????????
         function parseActFormat(str, dictionary)
         {
             var result = "";
@@ -352,17 +359,21 @@
 
     </script>
 </head>
-<body>
+<div id="wrapper">
+   <body>
 
     <div id="encounter">
         No data to show.
-        <!-- ここにエンカウント情報が入る -->
+        <!-- ?????????????? -->
     </div>
 
     <table id="combatantTable">
-        <!-- ここにヘッダが入る -->
-        <!-- ここに各キャラの情報が入る -->
+        <!-- ????????? -->
+        <!-- ????????????? -->
     </table>
 
 </body>
+<table id="combatantTable">
+    </table>
+</div>
 </html>
