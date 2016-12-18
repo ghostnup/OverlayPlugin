@@ -38,6 +38,7 @@ namespace RainbowMage.OverlayPlugin.Overlays
         private void SetupControlProperties()
         {
             this.checkMiniParseVisible.Checked = config.IsVisible;
+            this.checkParseWindowVisible.Checked = config.IsWindowVisible;
             this.checkMiniParseClickthru.Checked = config.IsClickThru;
             this.checkLock.Checked = config.IsLocked;
             this.textMiniParseUrl.Text = config.Url;
@@ -60,6 +61,13 @@ namespace RainbowMage.OverlayPlugin.Overlays
                 this.InvokeIfRequired(() =>
                 {
                     this.checkMiniParseVisible.Checked = e.IsVisible;
+                });
+            };
+            this.config.WinVisibleChanged += (o, e) =>
+            {
+                this.InvokeIfRequired(() =>
+                {
+                    this.checkParseWindowVisible.Checked = e.IsWindowVisible;
                 });
             };
             this.config.ClickThruChanged += (o, e) =>
@@ -143,6 +151,11 @@ namespace RainbowMage.OverlayPlugin.Overlays
         private void checkWindowVisible_CheckedChanged(object sender, EventArgs e)
         {
             this.config.IsVisible = checkMiniParseVisible.Checked;
+        }
+
+        private void checkParseWindowVisible_CheckedChanged(object sender, EventArgs e)
+        {
+            this.config.IsWindowVisible = checkParseWindowVisible.Checked;
         }
 
         private void checkMouseClickthru_CheckedChanged(object sender, EventArgs e)

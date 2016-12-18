@@ -26,6 +26,15 @@ namespace RainbowMage.OverlayPlugin
         }
     }
 
+    public class WinVisibleStateChangedEventArgs : EventArgs
+    {
+        public bool IsWindowVisible { get; private set; }
+        public WinVisibleStateChangedEventArgs(bool isWindowVisible)
+        {
+            this.IsWindowVisible = isWindowVisible;
+        }
+    }
+
     public class ThruStateChangedEventArgs : EventArgs
     {
         public bool IsClickThru { get; private set; }

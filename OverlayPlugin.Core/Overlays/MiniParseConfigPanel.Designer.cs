@@ -37,7 +37,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.checkMiniParseVisible = new System.Windows.Forms.CheckBox();
             this.checkMiniParseClickthru = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -56,11 +55,15 @@
             this.textGlobalHotkey = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.checkLock = new System.Windows.Forms.CheckBox();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.checkParseWindowVisible = new System.Windows.Forms.CheckBox();
+            this.checkMiniParseVisible = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudMaxFrameRate)).BeginInit();
+            this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -73,7 +76,6 @@
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label3, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.checkMiniParseVisible, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.checkMiniParseClickthru, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 10);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 1, 3);
@@ -86,6 +88,7 @@
             this.tableLayoutPanel1.Controls.Add(this.textGlobalHotkey, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.label9, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.checkLock, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel4, 1, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
             // label6
@@ -123,13 +126,6 @@
             // 
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
-            // 
-            // checkMiniParseVisible
-            // 
-            resources.ApplyResources(this.checkMiniParseVisible, "checkMiniParseVisible");
-            this.checkMiniParseVisible.Name = "checkMiniParseVisible";
-            this.checkMiniParseVisible.UseVisualStyleBackColor = true;
-            this.checkMiniParseVisible.CheckedChanged += new System.EventHandler(this.checkWindowVisible_CheckedChanged);
             // 
             // checkMiniParseClickthru
             // 
@@ -264,6 +260,27 @@
             this.checkLock.UseVisualStyleBackColor = true;
             this.checkLock.CheckedChanged += new System.EventHandler(this.checkLock_CheckedChanged);
             // 
+            // tableLayoutPanel4
+            // 
+            resources.ApplyResources(this.tableLayoutPanel4, "tableLayoutPanel4");
+            this.tableLayoutPanel4.Controls.Add(this.checkParseWindowVisible, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.checkMiniParseVisible, 0, 0);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            // 
+            // checkParseWindowVisible
+            // 
+            resources.ApplyResources(this.checkParseWindowVisible, "checkParseWindowVisible");
+            this.checkParseWindowVisible.Name = "checkParseWindowVisible";
+            this.checkParseWindowVisible.UseVisualStyleBackColor = true;
+            this.checkParseWindowVisible.CheckedChanged += new System.EventHandler(this.checkParseWindowVisible_CheckedChanged);
+            // 
+            // checkMiniParseVisible
+            // 
+            resources.ApplyResources(this.checkMiniParseVisible, "checkMiniParseVisible");
+            this.checkMiniParseVisible.Name = "checkMiniParseVisible";
+            this.checkMiniParseVisible.UseVisualStyleBackColor = true;
+            this.checkMiniParseVisible.CheckedChanged += new System.EventHandler(this.checkWindowVisible_CheckedChanged);
+            // 
             // MiniParseConfigPanel
             // 
             resources.ApplyResources(this, "$this");
@@ -278,6 +295,8 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudMaxFrameRate)).EndInit();
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -311,5 +330,7 @@
         private System.Windows.Forms.TextBox textGlobalHotkey;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox checkLock;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.CheckBox checkParseWindowVisible;
     }
 }

@@ -32,6 +32,7 @@ namespace RainbowMage.OverlayPlugin
         /// オーバーレイフォームを取得します。
         /// </summary>
         public OverlayForm Overlay { get; private set; }
+        public OverlayForm2 Overlay2 { get; private set; }
 
         /// <summary>
         /// オーバーレイの設定を取得します。
@@ -83,6 +84,7 @@ namespace RainbowMage.OverlayPlugin
             try
             {
                 this.Overlay = new OverlayForm("about:blank", this.Config.MaxFrameRate);
+                this.Overlay2 = new OverlayForm2("about:blank");
 
                 // グローバルホットキーを設定
                 if (this.Config.GlobalHotkeyEnabled)
@@ -106,9 +108,21 @@ namespace RainbowMage.OverlayPlugin
                     this.Overlay.Location = this.Config.Position;
                 }
 
+                if (!Util.IsOnScreen(this.Overlay2))
+                {
+                    this.Overlay2.StartPosition = FormStartPosition.WindowsDefaultLocation;
+                }
+                else
+                {
+                    this.Overlay2.Location = this.Config.WindowPosition;
+                }
+
                 this.Overlay.Text = this.Name;
                 this.Overlay.Size = this.Config.Size;
                 this.Overlay.IsClickThru = this.Config.IsClickThru;
+
+                this.Overlay2.Text = this.Name;
+                this.Overlay2.Size = this.Config.WindowSize;
 
                 // イベントハンドラを設定
                 this.Overlay.Renderer.BrowserError += (o, e) =>
@@ -144,6 +158,10 @@ namespace RainbowMage.OverlayPlugin
                 this.Overlay.Visible = this.Config.IsVisible;
 
                 this.Overlay.Locked = this.Config.IsLocked;
+
+                this.Overlay2.Show();
+
+                this.Overlay2.Visible = this.Config.IsWindowVisible;
             }
             catch (Exception ex)
             {
@@ -280,6 +298,11 @@ namespace RainbowMage.OverlayPlugin
                 this.Overlay.Visible = e.IsVisible;
             };
 
+            this.Config.WinVisibleChanged += (o, e) =>
+            {
+                this.Overlay2.Visible = e.IsWindowVisible;
+            };
+
             this.Config.ClickThruChanged += (o, e) =>
             {
                 this.Overlay.IsClickThru = e.IsClickThru;
@@ -316,6 +339,11 @@ namespace RainbowMage.OverlayPlugin
                     this.Overlay.Close();
                     this.Overlay.Dispose();
                 }
+                if (this.Overlay2 != null)
+                {
+                    this.Overlay2.Close();
+                    this.Overlay2.Dispose();
+                }
                 if (this.hook != null)
                 {
                     this.hook.Dispose();
@@ -329,7 +357,8 @@ namespace RainbowMage.OverlayPlugin
 
         public virtual void Navigate(string url)
         {
-                this.Overlay.Url = url;
+            this.Overlay.Url = url;
+            this.Overlay2.Url = url;
         }
 
         protected void Log(LogLevel level, string message)
@@ -350,6 +379,8 @@ namespace RainbowMage.OverlayPlugin
         {
             this.Config.Position = this.Overlay.Location;
             this.Config.Size = this.Overlay.Size;
+            this.Config.WindowPosition = this.Overlay2.Location;
+            this.Config.WindowSize = this.Overlay2.Size;
         }
 
         private void NotifyOverlayState()
@@ -364,6 +395,13 @@ namespace RainbowMage.OverlayPlugin
             {
                 this.Overlay.Renderer.ExecuteScript(updateScript);
             }
+
+            if (this.Overlay2 != null &&
+                this.Overlay2.Renderer != null &&
+                this.Overlay2.Renderer.Browser != null)
+            {
+                this.Overlay2.Renderer.ExecuteScript(updateScript);
+            }
         }
 
         public void SendMessage(string message)
@@ -377,6 +415,13 @@ namespace RainbowMage.OverlayPlugin
                 this.Overlay.Renderer.Browser != null)
             {
                 this.Overlay.Renderer.ExecuteScript(script);
+            }
+
+            if (this.Overlay2 != null &&
+                this.Overlay2.Renderer != null &&
+                this.Overlay2.Renderer.Browser != null)
+            {
+                this.Overlay2.Renderer.ExecuteScript(script);
             }
         }
     }

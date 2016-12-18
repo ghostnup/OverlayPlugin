@@ -17,6 +17,7 @@ namespace RainbowMage.OverlayPlugin
     public abstract class OverlayConfigBase : IOverlayConfig
     {
         public event EventHandler<VisibleStateChangedEventArgs> VisibleChanged;
+        public event EventHandler<WinVisibleStateChangedEventArgs> WinVisibleChanged;
         public event EventHandler<ThruStateChangedEventArgs> ClickThruChanged;
         public event EventHandler<UrlChangedEventArgs> UrlChanged;
         public event EventHandler<MaxFrameRateChangedEventArgs> MaxFrameRateChanged;
@@ -50,6 +51,27 @@ namespace RainbowMage.OverlayPlugin
                     if (VisibleChanged != null)
                     {
                         VisibleChanged(this, new VisibleStateChangedEventArgs(this.isVisible));
+                    }
+                }
+            }
+        }
+
+        private bool isWindowVisible;
+        [XmlElement("IsWindowVisible")]
+        public bool IsWindowVisible
+        {
+            get
+            {
+                return this.isWindowVisible;
+            }
+            set
+            {
+                if (this.isWindowVisible != value)
+                {
+                    this.isWindowVisible = value;
+                    if (WinVisibleChanged != null)
+                    {
+                        WinVisibleChanged(this, new WinVisibleStateChangedEventArgs(this.isWindowVisible));
                     }
                 }
             }
@@ -90,6 +112,12 @@ namespace RainbowMage.OverlayPlugin
         /// </summary>
         [XmlElement("Size")]
         public Size Size { get; set; }
+
+        [XmlElement("WindowPosition")]
+        public Point WindowPosition { get; set; }
+
+        [XmlElement("WindowSize")]
+        public Size WindowSize { get; set; }
 
         private string url;
         /// <summary>
@@ -239,9 +267,12 @@ namespace RainbowMage.OverlayPlugin
         {
             this.Name = name;
             this.IsVisible = true;
+            this.IsWindowVisible = false;
             this.IsClickThru = false;
             this.Position = new Point(20, 20);
             this.Size = new Size(300, 300);
+            this.WindowPosition = new Point(400, 20);
+            this.WindowSize = new Size(350, 350);
             this.Url = "";
             this.MaxFrameRate = 30;
             this.globalHotkeyEnabled = false;

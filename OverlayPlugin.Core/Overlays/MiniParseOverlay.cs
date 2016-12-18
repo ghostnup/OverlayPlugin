@@ -57,6 +57,13 @@ namespace RainbowMage.OverlayPlugin.Overlays
                 {
                     this.Overlay.Renderer.ExecuteScript(updateScript);
                 }
+
+                if (this.Overlay2 != null &&
+                    this.Overlay2.Renderer != null &&
+                    this.Overlay2.Renderer.Browser != null)
+                {
+                    this.Overlay2.Renderer.ExecuteScript(updateScript);
+                }
             }
         }
 

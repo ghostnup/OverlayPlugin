@@ -17,6 +17,7 @@ namespace RainbowMage.OverlayPlugin
         #region Config for version 0.1.2.0 or below
 #pragma warning disable 612, 618
         [Obsolete] public event EventHandler<VisibleStateChangedEventArgs> VisibleChanged;
+        [Obsolete] public event EventHandler<WinVisibleStateChangedEventArgs> WinVisibleChanged;
         [Obsolete] public event EventHandler<ThruStateChangedEventArgs> ClickThruChanged;
         [Obsolete] public event EventHandler<UrlChangedEventArgs> UrlChanged;
         [Obsolete] public event EventHandler<SortKeyChangedEventArgs> SortKeyChanged;
@@ -38,6 +39,27 @@ namespace RainbowMage.OverlayPlugin
                     if (VisibleChanged != null)
                     {
                         VisibleChanged(this, new VisibleStateChangedEventArgs(this.isVisible));
+                    }
+                }
+            }
+        }
+
+        private bool isWindowVisible;
+        [XmlElement("IsWindowVisible")]
+        public bool IsWindowVisibleObsolete
+        {
+            get
+            {
+                return this.isWindowVisible;
+            }
+            set
+            {
+                if (this.isWindowVisible != value)
+                {
+                    this.isWindowVisible = value;
+                    if (WinVisibleChanged != null)
+                    {
+                        WinVisibleChanged(this, new WinVisibleStateChangedEventArgs(this.isWindowVisible));
                     }
                 }
             }
@@ -230,6 +252,7 @@ namespace RainbowMage.OverlayPlugin
             #region Config for version 0.1.2.0 or below
 #pragma warning disable 612, 618
             this.IsVisibleObsolete = true;
+            this.IsWindowVisibleObsolete = false;
             this.IsClickThruObsolete = false;
             this.OverlayPositionObsolete = new Point(20, 20);
             this.OverlaySizeObsolete = new Size(300, 300);
@@ -301,6 +324,8 @@ namespace RainbowMage.OverlayPlugin
             var miniparseOverlayConfig = new MiniParseOverlayConfig(DefaultMiniParseOverlayName);
             miniparseOverlayConfig.Position = new Point(20, 20);
             miniparseOverlayConfig.Size = new Size(500, 300);
+            miniparseOverlayConfig.WindowPosition = new Point(600, 20);
+            miniparseOverlayConfig.WindowSize = new Size(550, 350);
             miniparseOverlayConfig.Url = new Uri(Path.Combine(pluginDirectory, "resources", "miniparse.html")).ToString(); 
 
             var spellTimerOverlayConfig = new SpellTimerOverlayConfig(DefaultSpellTimerOverlayName);
@@ -326,6 +351,7 @@ namespace RainbowMage.OverlayPlugin
             {
                 this.MiniParseOverlayObsolete = new MiniParseOverlayConfig(DefaultMiniParseOverlayName);
                 this.MiniParseOverlayObsolete.IsVisible = this.IsVisibleObsolete;
+                this.MiniParseOverlayObsolete.IsWindowVisible = this.IsWindowVisibleObsolete;
                 this.MiniParseOverlayObsolete.IsClickThru = this.IsClickThruObsolete;
                 this.MiniParseOverlayObsolete.Position = this.OverlayPositionObsolete;
                 this.MiniParseOverlayObsolete.Size = this.OverlaySizeObsolete;
@@ -356,6 +382,8 @@ namespace RainbowMage.OverlayPlugin
                 miniParseOverlayConfig.IsClickThru = this.MiniParseOverlayObsolete.IsClickThru;
                 miniParseOverlayConfig.Position = this.MiniParseOverlayObsolete.Position;
                 miniParseOverlayConfig.Size = this.MiniParseOverlayObsolete.Size;
+                miniParseOverlayConfig.WindowPosition = this.MiniParseOverlayObsolete.WindowPosition;
+                miniParseOverlayConfig.WindowSize = this.MiniParseOverlayObsolete.WindowSize;
                 miniParseOverlayConfig.Url = this.MiniParseOverlayObsolete.Url;
                 miniParseOverlayConfig.SortKey = this.MiniParseOverlayObsolete.SortKey;
                 miniParseOverlayConfig.SortType = this.MiniParseOverlayObsolete.SortType;
