@@ -117,68 +117,53 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="buttonRemoveOverlay.Text" xml:space="preserve">
-    <value>削除</value>
+  <data name="label6.Text" xml:space="preserve">
+    <value>最大帧速率</value>
   </data>
-  <data name="buttonNewOverlay.Text" xml:space="preserve">
-    <value>追加</value>
+  <data name="label5.Text" xml:space="preserve">
+    <value>排序类型</value>
   </data>
-  <data name="columnHeader4.Text" xml:space="preserve">
-    <value>名前</value>
+  <data name="label4.Text" xml:space="preserve">
+    <value>排序关键字</value>
   </data>
-  <data name="columnHeader5.Text" xml:space="preserve">
-    <value>種類</value>
+  <data name="label2.Text" xml:space="preserve">
+    <value>启用点击穿透</value>
   </data>
-  <data name="groupBox2.Text" xml:space="preserve">
-    <value>オーバーレイの管理</value>
+  <data name="label3.Text" xml:space="preserve">
+    <value>显示美化</value>
   </data>
-  <data name="checkBoxAutoHide.Text" xml:space="preserve">
-    <value>非アクティブのときに自動的にオーバーレイを隠す</value>
+  <data name="buttonMiniParseCopyActXiv.Text" xml:space="preserve">
+    <value>复制更新的变量到剪贴板</value>
   </data>
-  <data name="tabPageMain.Text" xml:space="preserve">
-    <value>設定</value>
+  <data name="buttonMiniParseOpenDevTools.Text" xml:space="preserve">
+    <value>打开开发工具</value>
   </data>
-  <data name="columnHeader1.Text" xml:space="preserve">
-    <value>時間</value>
+  <data name="buttonMiniParseReloadBrowser.Text" xml:space="preserve">
+    <value>重载美化</value>
   </data>
-  <data name="columnHeader2.Text" xml:space="preserve">
-    <value>レベル</value>
+  <data name="label13.Text" xml:space="preserve">
+    <value>※需要重启插件才能应用最大帧速率和热键设置</value>
   </data>
-  <data name="columnHeader3.Text" xml:space="preserve">
-    <value>メッセージ</value>
+  <data name="label7.Text" xml:space="preserve">
+    <value>启用全局热键</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>全局热键</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>锁定前覆层</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="menuCopyLogAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+  <data name="checkParseWindowVisible.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 16</value>
   </data>
-  <data name="menuCopyLogAll.Text" xml:space="preserve">
-    <value>全てのログをコピー</value>
+  <data name="checkParseWindowVisible.Text" xml:space="preserve">
+    <value>窗口(用于捕捉)</value>
   </data>
-  <data name="menuLogCopy.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
+  <data name="checkMiniParseVisible.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 16</value>
   </data>
-  <data name="menuLogCopy.Text" xml:space="preserve">
-    <value>選択されたログをコピー</value>
-  </data>
-  <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 6</value>
-  </data>
-  <data name="menuFollowLatestLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
-  </data>
-  <data name="menuFollowLatestLog.Text" xml:space="preserve">
-    <value>最新のログを常に表示</value>
-  </data>
-  <data name="toolStripMenuItem2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 6</value>
-  </data>
-  <data name="menuClearLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 22</value>
-  </data>
-  <data name="menuClearLog.Text" xml:space="preserve">
-    <value>ログをクリア</value>
-  </data>
-  <data name="contextMenuLogList.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 104</value>
+  <data name="checkMiniParseVisible.Text" xml:space="preserve">
+    <value>前覆层</value>
   </data>
 </root>
