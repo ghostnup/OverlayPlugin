@@ -42,6 +42,7 @@ namespace RainbowMage.OverlayPlugin.Overlays
             this.checkMiniParseClickthru.Checked = config.IsClickThru;
             this.checkLock.Checked = config.IsLocked;
             this.textMiniParseUrl.Text = config.Url;
+            this.textMiniParseUrl2.Text = config.Url2;
             this.textMiniParseSortKey.Text = config.SortKey;
             this.comboMiniParseSortType.DisplayMember = "Key";
             this.comboMiniParseSortType.ValueMember = "Value";
@@ -82,6 +83,13 @@ namespace RainbowMage.OverlayPlugin.Overlays
                 this.InvokeIfRequired(() =>
                 {
                     this.textMiniParseUrl.Text = e.NewUrl;
+                });
+            };
+            this.config.Url2Changed += (o, e) =>
+            {
+                this.InvokeIfRequired(() =>
+                {
+                    this.textMiniParseUrl2.Text = e.NewUrl2;
                 });
             };
             this.config.SortKeyChanged += (o, e) =>
@@ -173,6 +181,11 @@ namespace RainbowMage.OverlayPlugin.Overlays
             this.config.Url = textMiniParseUrl.Text;
         }
 
+        private void textMiniParseUrl2_Leave(object sender, EventArgs e)
+        {
+            this.config.Url2 = textMiniParseUrl2.Text;
+        }
+
         private void textSortKey_TextChanged(object sender, EventArgs e)
         {
             this.config.SortKey = this.textMiniParseSortKey.Text;
@@ -192,6 +205,7 @@ namespace RainbowMage.OverlayPlugin.Overlays
         private void buttonReloadBrowser_Click(object sender, EventArgs e)
         {
             this.overlay.Navigate(this.config.Url);
+            this.overlay.Navigate2(this.config.Url2);
         }
 
         private void buttonSelectFile_Click(object sender, EventArgs e)
@@ -201,6 +215,16 @@ namespace RainbowMage.OverlayPlugin.Overlays
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 this.config.Url = new Uri(ofd.FileName).ToString();
+            }
+        }
+
+        private void buttonMiniParseSelectFile2_Click(object sender, EventArgs e)
+        {
+            var ofd = new OpenFileDialog();
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                this.config.Url2 = new Uri(ofd.FileName).ToString();
             }
         }
 

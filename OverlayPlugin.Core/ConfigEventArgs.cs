@@ -53,6 +53,15 @@ namespace RainbowMage.OverlayPlugin
         }
     }
 
+    public class Url2ChangedEventArgs : EventArgs
+    {
+        public string NewUrl2 { get; private set; }
+        public Url2ChangedEventArgs(string url2)
+        {
+            this.NewUrl2 = url2;
+        }
+    }
+
     public class SortTypeChangedEventArgs : EventArgs
     {
         public MiniParseSortType NewSortType { get; private set; }

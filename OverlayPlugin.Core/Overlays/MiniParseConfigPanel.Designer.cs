@@ -44,6 +44,10 @@
             this.buttonMiniParseOpenDevTools = new System.Windows.Forms.Button();
             this.buttonMiniParseReloadBrowser = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.textMiniParseUrl2 = new System.Windows.Forms.TextBox();
+            this.buttonMiniParseSelectFile2 = new System.Windows.Forms.Button();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.textMiniParseUrl = new System.Windows.Forms.TextBox();
             this.buttonMiniParseSelectFile = new System.Windows.Forms.Button();
             this.comboMiniParseSortType = new System.Windows.Forms.ComboBox();
@@ -62,6 +66,8 @@
             this.panel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel6.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudMaxFrameRate)).BeginInit();
             this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
@@ -136,9 +142,9 @@
             // 
             // panel1
             // 
-            resources.ApplyResources(this.panel1, "panel1");
             this.tableLayoutPanel1.SetColumnSpan(this.panel1, 2);
             this.panel1.Controls.Add(this.tableLayoutPanel3);
+            resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
             // tableLayoutPanel3
@@ -174,9 +180,36 @@
             // tableLayoutPanel2
             // 
             resources.ApplyResources(this.tableLayoutPanel2, "tableLayoutPanel2");
-            this.tableLayoutPanel2.Controls.Add(this.textMiniParseUrl, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.buttonMiniParseSelectFile, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel6, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel5, 0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            // 
+            // tableLayoutPanel6
+            // 
+            resources.ApplyResources(this.tableLayoutPanel6, "tableLayoutPanel6");
+            this.tableLayoutPanel6.Controls.Add(this.textMiniParseUrl2, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.buttonMiniParseSelectFile2, 1, 0);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            // 
+            // textMiniParseUrl2
+            // 
+            resources.ApplyResources(this.textMiniParseUrl2, "textMiniParseUrl2");
+            this.textMiniParseUrl2.Name = "textMiniParseUrl2";
+            this.textMiniParseUrl2.Leave += new System.EventHandler(this.textMiniParseUrl2_Leave);
+            // 
+            // buttonMiniParseSelectFile2
+            // 
+            resources.ApplyResources(this.buttonMiniParseSelectFile2, "buttonMiniParseSelectFile2");
+            this.buttonMiniParseSelectFile2.Name = "buttonMiniParseSelectFile2";
+            this.buttonMiniParseSelectFile2.UseVisualStyleBackColor = true;
+            this.buttonMiniParseSelectFile2.Click += new System.EventHandler(this.buttonMiniParseSelectFile2_Click);
+            // 
+            // tableLayoutPanel5
+            // 
+            resources.ApplyResources(this.tableLayoutPanel5, "tableLayoutPanel5");
+            this.tableLayoutPanel5.Controls.Add(this.textMiniParseUrl, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.buttonMiniParseSelectFile, 1, 0);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             // 
             // textMiniParseUrl
             // 
@@ -293,10 +326,12 @@
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.tableLayoutPanel6.ResumeLayout(false);
+            this.tableLayoutPanel6.PerformLayout();
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudMaxFrameRate)).EndInit();
             this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -332,5 +367,9 @@
         private System.Windows.Forms.CheckBox checkLock;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.CheckBox checkParseWindowVisible;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
+        private System.Windows.Forms.TextBox textMiniParseUrl2;
+        private System.Windows.Forms.Button buttonMiniParseSelectFile2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
     }
 }

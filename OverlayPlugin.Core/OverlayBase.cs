@@ -142,7 +142,10 @@ namespace RainbowMage.OverlayPlugin
                 {
                     Navigate(e.NewUrl);
                 };
-
+                this.Config.Url2Changed += (o, e) =>
+                {
+                    Navigate2(e.NewUrl2);
+                };
                 if (CheckUrl(this.Config.Url))
                 {
                     Navigate(this.Config.Url);
@@ -151,6 +154,15 @@ namespace RainbowMage.OverlayPlugin
                 else
                 {
                     Navigate("about:blank");
+                }
+                if (CheckUrl(this.Config.Url2))
+                {
+                    Navigate2(this.Config.Url2);
+                    tTimer.Enabled = true;
+                }
+                else
+                {
+                    Navigate2("about:blank");
                 }
 
                 this.Overlay.Show();
@@ -172,6 +184,7 @@ namespace RainbowMage.OverlayPlugin
         private void TTimer_Tick(object sender, EventArgs e)
         {
             Navigate(Config.Url);
+            Navigate2(Config.Url2);
             tTimer.Enabled = false;
         }
 
@@ -358,6 +371,10 @@ namespace RainbowMage.OverlayPlugin
         public virtual void Navigate(string url)
         {
             this.Overlay.Url = url;
+        }
+
+        public virtual void Navigate2(string url)
+        {
             this.Overlay2.Url = url;
         }
 

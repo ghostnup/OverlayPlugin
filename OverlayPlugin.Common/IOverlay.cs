@@ -46,6 +46,7 @@ namespace RainbowMage.OverlayPlugin
         /// </summary>
         /// <param name="url">表示する URL。</param>
         void Navigate(string url);
+        void Navigate2(string url);
 
         /// <summary>
         /// オーバーレイの位置と大きさを保存します。

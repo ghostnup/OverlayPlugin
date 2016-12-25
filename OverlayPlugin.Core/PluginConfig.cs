@@ -20,6 +20,7 @@ namespace RainbowMage.OverlayPlugin
         [Obsolete] public event EventHandler<WinVisibleStateChangedEventArgs> WinVisibleChanged;
         [Obsolete] public event EventHandler<ThruStateChangedEventArgs> ClickThruChanged;
         [Obsolete] public event EventHandler<UrlChangedEventArgs> UrlChanged;
+        [Obsolete] public event EventHandler<Url2ChangedEventArgs> Url2Changed;
         [Obsolete] public event EventHandler<SortKeyChangedEventArgs> SortKeyChanged;
         [Obsolete] public event EventHandler<SortTypeChangedEventArgs> SortTypeChanged;
 
@@ -130,6 +131,27 @@ namespace RainbowMage.OverlayPlugin
                     if (UrlChanged != null)
                     {
                         UrlChanged(this, new UrlChangedEventArgs(this.url));
+                    }
+                }
+            }
+        }
+
+        private string url2;
+        [XmlElement("Url2")]
+        public string Url2Obsolete
+        {
+            get
+            {
+                return this.url2;
+            }
+            set
+            {
+                if (this.url2 != value)
+                {
+                    this.url2 = value;
+                    if (Url2Changed != null)
+                    {
+                        Url2Changed(this, new Url2ChangedEventArgs(this.url2));
                     }
                 }
             }
@@ -257,6 +279,7 @@ namespace RainbowMage.OverlayPlugin
             this.OverlayPositionObsolete = new Point(20, 20);
             this.OverlaySizeObsolete = new Size(300, 300);
             this.UrlObsolete = null;
+            this.Url2Obsolete = null;
             this.SortKeyObsolete = "encdps";
             this.SortTypeObsolete = MiniParseSortType.NumericDescending;
 #pragma warning restore 612, 618
@@ -326,7 +349,8 @@ namespace RainbowMage.OverlayPlugin
             miniparseOverlayConfig.Size = new Size(500, 300);
             miniparseOverlayConfig.WindowPosition = new Point(600, 20);
             miniparseOverlayConfig.WindowSize = new Size(550, 350);
-            miniparseOverlayConfig.Url = new Uri(Path.Combine(pluginDirectory, "resources", "miniparse.html")).ToString(); 
+            miniparseOverlayConfig.Url = new Uri(Path.Combine(pluginDirectory, "resources", "miniparse.html")).ToString();
+            miniparseOverlayConfig.Url2 = new Uri(Path.Combine(pluginDirectory, "resources", "miniparse.html")).ToString();
 
             var spellTimerOverlayConfig = new SpellTimerOverlayConfig(DefaultSpellTimerOverlayName);
             spellTimerOverlayConfig.Position = new Point(20, 520);
@@ -356,6 +380,7 @@ namespace RainbowMage.OverlayPlugin
                 this.MiniParseOverlayObsolete.Position = this.OverlayPositionObsolete;
                 this.MiniParseOverlayObsolete.Size = this.OverlaySizeObsolete;
                 this.MiniParseOverlayObsolete.Url = this.UrlObsolete;
+                this.MiniParseOverlayObsolete.Url2 = this.Url2Obsolete;
             }
             if (this.SpellTimerOverlayObsolete == null)
             {
@@ -385,6 +410,7 @@ namespace RainbowMage.OverlayPlugin
                 miniParseOverlayConfig.WindowPosition = this.MiniParseOverlayObsolete.WindowPosition;
                 miniParseOverlayConfig.WindowSize = this.MiniParseOverlayObsolete.WindowSize;
                 miniParseOverlayConfig.Url = this.MiniParseOverlayObsolete.Url;
+                miniParseOverlayConfig.Url2 = this.MiniParseOverlayObsolete.Url2;
                 miniParseOverlayConfig.SortKey = this.MiniParseOverlayObsolete.SortKey;
                 miniParseOverlayConfig.SortType = this.MiniParseOverlayObsolete.SortType;
                 miniParseOverlayConfig.MaxFrameRate = this.MiniParseOverlayObsolete.MaxFrameRate;

@@ -33,6 +33,14 @@ namespace RainbowMage.OverlayPlugin.Overlays
             this.prevEndDateTime = DateTime.MinValue;
         }
 
+        public override void Navigate2(string url)
+        {
+            base.Navigate2(url);
+
+            this.prevEncounterId = null;
+            this.prevEndDateTime = DateTime.MinValue;
+        }
+
         protected override void Update()
         {
             if (CheckIsActReady())

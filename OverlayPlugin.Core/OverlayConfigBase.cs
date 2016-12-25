@@ -20,6 +20,7 @@ namespace RainbowMage.OverlayPlugin
         public event EventHandler<WinVisibleStateChangedEventArgs> WinVisibleChanged;
         public event EventHandler<ThruStateChangedEventArgs> ClickThruChanged;
         public event EventHandler<UrlChangedEventArgs> UrlChanged;
+        public event EventHandler<Url2ChangedEventArgs> Url2Changed;
         public event EventHandler<MaxFrameRateChangedEventArgs> MaxFrameRateChanged;
         public event EventHandler<GlobalHotkeyEnabledChangedEventArgs> GlobalHotkeyEnabledChanged;
         public event EventHandler<GlobalHotkeyChangedEventArgs> GlobalHotkeyChanged;
@@ -138,6 +139,30 @@ namespace RainbowMage.OverlayPlugin
                     if (UrlChanged != null)
                     {
                         UrlChanged(this, new UrlChangedEventArgs(this.url));
+                    }
+                }
+            }
+        }
+
+        private string url2;
+        /// <summary>
+        /// オーバーレイが表示する URL を取得または設定します。
+        /// </summary>
+        [XmlElement("Url2")]
+        public string Url2
+        {
+            get
+            {
+                return this.url2;
+            }
+            set
+            {
+                if (this.url2 != value)
+                {
+                    this.url2 = value;
+                    if (Url2Changed != null)
+                    {
+                        Url2Changed(this, new Url2ChangedEventArgs(this.url2));
                     }
                 }
             }
@@ -274,6 +299,7 @@ namespace RainbowMage.OverlayPlugin
             this.WindowPosition = new Point(400, 20);
             this.WindowSize = new Size(350, 350);
             this.Url = "";
+            this.Url2 = "";
             this.MaxFrameRate = 30;
             this.globalHotkeyEnabled = false;
             this.GlobalHotkey = Keys.None;
