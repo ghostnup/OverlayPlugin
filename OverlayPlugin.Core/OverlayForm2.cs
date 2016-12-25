@@ -176,6 +176,14 @@ namespace RainbowMage.OverlayPlugin
             UpdateRender();
         }
 
+        private void OverlayForm2_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible == true && this.Renderer != null)
+            {
+                this.Renderer.Reload();
+            }
+        }
+
         private void OverlayForm2_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;

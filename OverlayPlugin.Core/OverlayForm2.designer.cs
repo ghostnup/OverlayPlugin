@@ -35,6 +35,7 @@ namespace RainbowMage.OverlayPlugin
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OverlayForm2_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OverlayForm2_FormClosed);
             this.Load += new System.EventHandler(this.OverlayForm2_Load);
+            this.VisibleChanged += new System.EventHandler(this.OverlayForm2_VisibleChanged);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OverlayForm2_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OverlayForm2_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OverlayForm2_MouseUp);
