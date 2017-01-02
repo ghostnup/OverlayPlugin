@@ -25,6 +25,7 @@ namespace RainbowMage.OverlayPlugin
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LemonChiffon;
             this.ClientSize = new System.Drawing.Size(394, 242);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "OverlayForm2";
@@ -32,7 +33,6 @@ namespace RainbowMage.OverlayPlugin
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "OverlayForm2";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OverlayForm2_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OverlayForm2_FormClosed);
             this.Load += new System.EventHandler(this.OverlayForm2_Load);
             this.VisibleChanged += new System.EventHandler(this.OverlayForm2_VisibleChanged);

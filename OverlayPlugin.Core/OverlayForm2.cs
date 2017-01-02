@@ -21,7 +21,11 @@ namespace RainbowMage.OverlayPlugin
         private DIBitmap surfaceBuffer;
         private object surfaceBufferLocker = new object();
         private int maxFrameRate;
+        private System.Threading.Timer zorderCorrector;
         private bool terminated = false;
+        private bool shiftKeyPressed = false;
+        private bool altKeyPressed = false;
+        private bool controlKeyPressed = false;
 
         public Renderer Renderer { get; private set; }
 
@@ -36,19 +40,41 @@ namespace RainbowMage.OverlayPlugin
             }
         }
 
+        private bool isClickThru;
+        public bool IsClickThru
+        {
+            get
+            {
+                return this.isClickThru;
+            }
+            set
+            {
+                if (this.isClickThru != value)
+                {
+                    this.isClickThru = value;
+                    UpdateMouseClickThru();
+                }
+            }
+        }
+
         public bool IsLoaded { get; private set; }
 
-        public OverlayForm2(string url)
+        public bool Locked { get; set; }
+
+        public OverlayForm2(string url, int maxFrameRate = 10)
         {
             InitializeComponent();
-
             Renderer.Initialize();
 
-            this.maxFrameRate = 10;
+            this.maxFrameRate = maxFrameRate;
             this.Renderer = new Renderer();
             this.Renderer.Render += renderer_Render;
+            this.MouseWheel += OverlayForm2_MouseWheel;
 
             this.url = url;
+
+            // Alt+Tab を押したときに表示されるプレビューから除外する
+            //Util.HidePreview(this);
         }
 
         public void Reload()
@@ -61,12 +87,46 @@ namespace RainbowMage.OverlayPlugin
         {
             get
             {
-                const int CP_NOCLOSE_BUTTON = 0x200;
+                const int WS_EX_NOACTIVATE = 0x08000000;
 
                 var cp = base.CreateParams;
-                //cp.ClassStyle = cp.ClassStyle | CP_NOCLOSE_BUTTON;
+                cp.ExStyle = cp.ExStyle | WS_EX_NOACTIVATE;
+                cp.ClassStyle = cp.ClassStyle | WS_EX_NOACTIVATE;
 
                 return cp;
+            }
+        }
+
+        [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            const int WM_NCHITTEST = 0x84;
+            const int HTBOTTOMRIGHT = 17;
+
+            const int gripSize = 16;
+
+            if (m.Msg == WM_NCHITTEST && !this.Locked)
+            {
+                var posisiton = new Point(m.LParam.ToInt32() & 0xFFFF, m.LParam.ToInt32() >> 16);
+                posisiton = this.PointToClient(posisiton);
+                if (posisiton.X >= this.ClientSize.Width - gripSize &&
+                    posisiton.Y >= this.ClientSize.Height - gripSize)
+                {
+                    m.Result = (IntPtr)HTBOTTOMRIGHT;
+                    return;
+                }
+            }
+
+            if (m.Msg == NativeMethods.WM_KEYDOWN ||
+                m.Msg == NativeMethods.WM_KEYUP ||
+                m.Msg == NativeMethods.WM_CHAR ||
+                m.Msg == NativeMethods.WM_SYSKEYDOWN ||
+                m.Msg == NativeMethods.WM_SYSKEYUP ||
+                m.Msg == NativeMethods.WM_SYSCHAR)
+            {
+                OnKeyEvent(ref m);
             }
         }
 
@@ -85,7 +145,7 @@ namespace RainbowMage.OverlayPlugin
 
                     var rect = new NativeMethods.RECT(0, 0, this.Width, this.Height);
                     var brush = NativeMethods.CreateSolidBrush((uint)ColorTranslator.ToWin32(this.BackColor));
-                    
+
                     NativeMethods.FillRect(pMemory, ref rect, brush);
                     NativeMethods.DeleteObject(brush);
 
@@ -131,6 +191,41 @@ namespace RainbowMage.OverlayPlugin
         }
         #endregion
 
+        #region Mouse click-thru related
+
+        private void UpdateMouseClickThru()
+        {
+            if (this.IsLoaded)
+            {
+                if (this.isClickThru)
+                {
+                    EnableMouseClickThru();
+                }
+                else
+                {
+                    DisableMouseClickThru();
+                }
+            }
+        }
+
+        private void EnableMouseClickThru()
+        {
+            NativeMethods.SetWindowLong(
+                this.Handle,
+                NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(this.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_TRANSPARENT);
+        }
+
+        private void DisableMouseClickThru()
+        {
+            NativeMethods.SetWindowLong(
+                this.Handle,
+                NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(this.Handle, NativeMethods.GWL_EXSTYLE) & ~NativeMethods.WS_EX_TRANSPARENT);
+        }
+
+        #endregion
+
         void renderer_Render(object sender, RenderEventArgs e)
         {
             if (!this.terminated)
@@ -165,7 +260,7 @@ namespace RainbowMage.OverlayPlugin
         {
             if (this.Renderer != null)
             {
-                this.Renderer.BeginRender(this.Width - 15 , this.Height - 15, this.Url, this.maxFrameRate);
+                this.Renderer.BeginRender(this.Width, this.Height, this.Url, this.maxFrameRate);
             }
         }
 
@@ -173,7 +268,19 @@ namespace RainbowMage.OverlayPlugin
         {
             this.IsLoaded = true;
 
+            UpdateMouseClickThru();
             UpdateRender();
+
+            zorderCorrector = new System.Threading.Timer((state) =>
+            {
+                if (this.Visible)
+                {
+                    if (!this.IsOverlaysGameWindow())
+                    {
+                        this.EnsureTopMost();
+                    }
+                }
+            }, null, 0, 1000);
         }
 
         private void OverlayForm2_VisibleChanged(object sender, EventArgs e)
@@ -182,12 +289,6 @@ namespace RainbowMage.OverlayPlugin
             {
                 this.Renderer.Reload();
             }
-        }
-
-        private void OverlayForm2_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-            this.WindowState = FormWindowState.Minimized; 
         }
 
         private void OverlayForm2_FormClosed(object sender, FormClosedEventArgs e)
@@ -202,6 +303,11 @@ namespace RainbowMage.OverlayPlugin
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            if (zorderCorrector != null)
+            {
+                zorderCorrector.Dispose();
+            }
+
             if (this.Renderer != null)
             {
                 this.Renderer.Dispose();
@@ -224,23 +330,51 @@ namespace RainbowMage.OverlayPlugin
         {
             if (this.Renderer != null)
             {
-                this.Renderer.Resize(this.Width - 15, this.Height - 15);
+                this.Renderer.Resize(this.Width, this.Height);
             }
         }
 
+        bool isDragging;
+        Point offset;
+
         private void OverlayForm2_MouseDown(object sender, MouseEventArgs e)
         {
+            if (!this.Locked)
+            {
+                isDragging = true;
+                offset = e.Location;
+            }
+
             this.Renderer.SendMouseUpDown(e.X, e.Y, GetMouseButtonType(e), false);
         }
 
         private void OverlayForm2_MouseMove(object sender, MouseEventArgs e)
         {
+            if (isDragging)
+            {
+                var screenPosition = PointToScreen(e.Location);
+                this.Location = new Point(
+                    screenPosition.X - offset.X,
+                    screenPosition.Y - offset.Y);
+            }
+            else
+            {
                 this.Renderer.SendMouseMove(e.X, e.Y, GetMouseButtonType(e));
+            }
         }
 
         private void OverlayForm2_MouseUp(object sender, MouseEventArgs e)
         {
+            isDragging = false;
+
             this.Renderer.SendMouseUpDown(e.X, e.Y, GetMouseButtonType(e), true);
+        }
+
+        private void OverlayForm2_MouseWheel(object sender, MouseEventArgs e)
+        {
+            var flags = GetMouseEventFlags(e);
+
+            this.Renderer.SendMouseWheel(e.X, e.Y, e.Delta, shiftKeyPressed);
         }
 
         private CefMouseButtonType GetMouseButtonType(MouseEventArgs e)
@@ -280,6 +414,19 @@ namespace RainbowMage.OverlayPlugin
                 flags |= CefEventFlags.RightMouseButton;
             }
 
+            if (shiftKeyPressed)
+            {
+                flags |= CefEventFlags.ShiftDown;
+            }
+            if (altKeyPressed)
+            {
+                flags |= CefEventFlags.AltDown;
+            }
+            if (controlKeyPressed)
+            {
+                flags |= CefEventFlags.ControlDown;
+            }
+
             return flags;
         }
 
@@ -301,6 +448,15 @@ namespace RainbowMage.OverlayPlugin
 
             // 前面側にOverlayが存在する、もしくはFF14が起動していない
             return true;
+        }
+
+        private void EnsureTopMost()
+        {
+            NativeMethods.SetWindowPos(
+                this.Handle,
+                NativeMethods.HWND_TOPMOST,
+                0, 0, 0, 0,
+                NativeMethods.SWP_NOSIZE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOACTIVATE);
         }
 
         private static object xivProcLocker = new object();
@@ -338,6 +494,133 @@ namespace RainbowMage.OverlayPlugin
                     return IntPtr.Zero;
                 }
             }
-        }        
+        }
+
+        private void OverlayForm2_KeyDown(object sender, KeyEventArgs e)
+        {
+            this.altKeyPressed = e.Alt;
+            this.shiftKeyPressed = e.Shift;
+            this.controlKeyPressed = e.Control;
+
+        }
+
+        private void OverlayForm2_KeyUp(object sender, KeyEventArgs e)
+        {
+            this.altKeyPressed = e.Alt;
+            this.shiftKeyPressed = e.Shift;
+            this.controlKeyPressed = e.Control;
+        }
+
+        private void OnKeyEvent(ref Message m)
+        {
+
+            var keyEvent = new CefKeyEvent();
+            keyEvent.WindowsKeyCode = m.WParam.ToInt32();
+            keyEvent.NativeKeyCode = (int)m.LParam.ToInt64();
+            keyEvent.IsSystemKey = m.Msg == NativeMethods.WM_SYSCHAR ||
+                                   m.Msg == NativeMethods.WM_SYSKEYDOWN ||
+                                   m.Msg == NativeMethods.WM_SYSKEYUP;
+
+            if (m.Msg == NativeMethods.WM_KEYDOWN || m.Msg == NativeMethods.WM_SYSKEYDOWN)
+            {
+                keyEvent.EventType = CefKeyEventType.RawKeyDown;
+            }
+            else if (m.Msg == NativeMethods.WM_KEYUP || m.Msg == NativeMethods.WM_SYSKEYUP)
+            {
+                keyEvent.EventType = CefKeyEventType.KeyUp;
+            }
+            else
+            {
+                keyEvent.EventType = CefKeyEventType.Char;
+            }
+            keyEvent.Modifiers = GetKeyboardModifiers(ref m);
+
+            if (this.Renderer != null)
+            {
+                this.Renderer.SendKeyEvent(keyEvent);
+            }
+        }
+
+        private CefEventFlags GetKeyboardModifiers(ref Message m)
+        {
+            var modifiers = CefEventFlags.None;
+
+            if (IsKeyDown(Keys.Shift)) modifiers |= CefEventFlags.ShiftDown;
+            if (IsKeyDown(Keys.Control)) modifiers |= CefEventFlags.ControlDown;
+            if (IsKeyDown(Keys.Menu)) modifiers |= CefEventFlags.AltDown;
+
+            if (IsKeyToggled(Keys.NumLock)) modifiers |= CefEventFlags.NumLockOn;
+            if (IsKeyToggled(Keys.Capital)) modifiers |= CefEventFlags.CapsLockOn;
+
+            switch ((Keys)m.WParam)
+            {
+                case Keys.Return:
+                    if (((m.LParam.ToInt64() >> 48) & 0x0100) != 0)
+                        modifiers |= CefEventFlags.IsKeyPad;
+                    break;
+                case Keys.Insert:
+                case Keys.Delete:
+                case Keys.Home:
+                case Keys.End:
+                case Keys.Prior:
+                case Keys.Next:
+                case Keys.Up:
+                case Keys.Down:
+                case Keys.Left:
+                case Keys.Right:
+                    if (!(((m.LParam.ToInt64() >> 48) & 0x0100) != 0))
+                        modifiers |= CefEventFlags.IsKeyPad;
+                    break;
+                case Keys.NumLock:
+                case Keys.NumPad0:
+                case Keys.NumPad1:
+                case Keys.NumPad2:
+                case Keys.NumPad3:
+                case Keys.NumPad4:
+                case Keys.NumPad5:
+                case Keys.NumPad6:
+                case Keys.NumPad7:
+                case Keys.NumPad8:
+                case Keys.NumPad9:
+                case Keys.Divide:
+                case Keys.Multiply:
+                case Keys.Subtract:
+                case Keys.Add:
+                case Keys.Decimal:
+                case Keys.Clear:
+                    modifiers |= CefEventFlags.IsKeyPad;
+                    break;
+                case Keys.Shift:
+                    if (IsKeyDown(Keys.LShiftKey)) modifiers |= CefEventFlags.IsLeft;
+                    else modifiers |= CefEventFlags.IsRight;
+                    break;
+                case Keys.Control:
+                    if (IsKeyDown(Keys.LControlKey)) modifiers |= CefEventFlags.IsLeft;
+                    else modifiers |= CefEventFlags.IsRight;
+                    break;
+                case Keys.Alt:
+                    if (IsKeyDown(Keys.LMenu)) modifiers |= CefEventFlags.IsLeft;
+                    else modifiers |= CefEventFlags.IsRight;
+                    break;
+                case Keys.LWin:
+                    modifiers |= CefEventFlags.IsLeft;
+                    break;
+                case Keys.RWin:
+                    modifiers |= CefEventFlags.IsRight;
+                    break;
+            }
+
+            return modifiers;
+        }
+
+        private bool IsKeyDown(Keys key)
+        {
+            return (NativeMethods.GetKeyState((int)key) & 0x8000) != 0;
+        }
+
+        private bool IsKeyToggled(Keys key)
+        {
+            return (NativeMethods.GetKeyState((int)key) & 1) == 1;
+        }
     }
 }
