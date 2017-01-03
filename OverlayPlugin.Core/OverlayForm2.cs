@@ -277,7 +277,7 @@ namespace RainbowMage.OverlayPlugin
                 {
                     if (!this.IsOverlaysGameWindow())
                     {
-                        this.EnsureTopMost();
+                        //this.EnsureTopMost();
                     }
                 }
             }, null, 0, 1000);
